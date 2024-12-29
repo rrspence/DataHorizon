@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import random
-from bot import bot_section
+from bot import bot_section # Import the bot functionality 
 
 # Question Pool for Practice Mode
 question_pool = [
@@ -169,8 +169,7 @@ def main():
     elif app_mode == "Practice Mode":
         practice_mode()
     elif app_mode == "Bot":
-        bot_section()
-        
+        bot_section() #Display the bot section
 
 if __name__ == "__main__":
     main()
