@@ -162,7 +162,7 @@ def practice_mode():
 # Sidebar Navigation
 def main():
     st.sidebar.title("Navigation")
-    app_mode = st.sidebar.radio("Go to", ["Dashboard", "Practice Mode"])
+    app_mode = st.sidebar.radio("Go to", ["Dashboard", "Practice Mode", "Bot"])
 
     if app_mode == "Dashboard":
         dashboard()
