@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import random
+from bot import bot_section
 
 # Question Pool for Practice Mode
 question_pool = [
@@ -161,12 +162,15 @@ def practice_mode():
 # Sidebar Navigation
 def main():
     st.sidebar.title("Navigation")
-    app_mode = st.sidebar.radio("Go to", ["Dashboard", "Practice Mode"])
+    app_mode = st.sidebar.radio("Go to", ["Dashboard", "Practice Mode", "Bot"])
 
     if app_mode == "Dashboard":
         dashboard()
     elif app_mode == "Practice Mode":
         practice_mode()
+    elif app_mode == "Bot":
+        bot_section()
+        
 
 if __name__ == "__main__":
     main()
