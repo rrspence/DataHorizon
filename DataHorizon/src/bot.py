@@ -1,30 +1,42 @@
-import streamlit as st # Import Streamlit for the app interface 
+import streamlit as st
+import openai
+import os
+from dotenv import load_dotenv
 
-# Define a dictionary of bot responses
-responses = {
-    "scatter plot": "A scatter plot displays data points on a two-dimensional plane, typically to show relationships between two variables. Use plt.scatter(x, y).",
-    "filter data": "To filter data in a DataFrame, use conditional indexing, e.g., df[df['column'] > value].",
-    "bar chart": "A bar chart displays data using rectangular bars. Use plt.bar(x, height).",
-}
+# Load environment variables
+load_dotenv()
 
+# Retrieve OpenAI API key
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    st.error("API key not found. Make sure it's set in the .env file.")
+    st.stop()
+
+# Set OpenAI API key
+openai.api_key = api_key
 
 # Bot Interaction Section
 def bot_section():
-    st.title("DataHorizon Bot")  # Add a title to the bot section
-    st.write("Ask me anything about data analysis or visualizations!")  # Brief description
+    st.title("DataHorizon Bot")
+    st.write("Ask me anything about data analysis or visualizations!")
 
     # Input box for user queries
     user_query = st.text_input("Your Question:")
 
     if user_query:  # Check if the user entered a question
-        # Normalize the input: strip whitespace and convert to lowercase
-        normalized_query = user_query.strip().lower()
-
-        # Match user input to predefined responses
-        response = responses.get(
-            normalized_query,  # Use the normalized input
-            "I'm sorry, I don't have an answer for that yet. Please try asking something else!",
-        )
-        st.write(response)  # Display the bot's response
-
-
+        # Show a loading spinner while waiting for the API response
+        with st.spinner("Generating response..."):
+            try:
+                # Send query to OpenAI API
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",  # Use "gpt-4" if available
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant specialized in data analysis and visualization."},
+                        {"role": "user", "content": user_query}
+                    ]
+                )
+                # Extract and display the response content
+                answer = response['choices'][0]['message']['content']
+                st.write(answer)
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
