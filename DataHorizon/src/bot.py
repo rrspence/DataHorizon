@@ -29,7 +29,7 @@ def bot_section():
             try:
                 # Send query to OpenAI API
                 response = openai.ChatCompletion.create(
-                    model="gpt-4",
+                    model="gpt-3.5-turbo",  # Use "gpt-4" if available
                     messages=[
                         {"role": "system", "content": "You are a helpful assistant specialized in data analysis and visualization."},
                         {"role": "user", "content": user_query}
