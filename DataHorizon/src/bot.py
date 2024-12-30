@@ -18,21 +18,35 @@ openai.api_key = api_key
 # Bot Interaction Section
 def bot_section():
     st.title("DataHorizon Bot")
-    st.write("Ask me anything about data analysis or visualizations!")
+    st.write("Ask me anything about data analysis, visualizations, or debugging Python errors!")
+
+    # Dropdown to select query type
+    query_type = st.selectbox("Select the type of query:", ["General Question", "Error Debugging"])
 
     # Input box for user queries
-    user_query = st.text_input("Your Question:")
+    if query_type == "General Question":
+        user_query = st.text_input("Enter your question about data analysis or visualization:")
+    elif query_type == "Error Debugging":
+        user_query = st.text_area("Paste the Python error message you want help with:")
 
-    if user_query:  # Check if the user entered a question
+    if user_query:  # Check if the user entered a query
         # Show a loading spinner while waiting for the API response
-        with st.spinner("Generating response..."):
+        with st.spinner("Analyzing your query..."):
             try:
+                # Set the system message dynamically based on query type
+                if query_type == "General Question":
+                    system_message = "You are a helpful assistant that specializes in data analysis and visualization."
+                    formatted_query = user_query
+                elif query_type == "Error Debugging":
+                    system_message = "You are a helpful assistant that specializes in debugging Python errors."
+                    formatted_query = f"Explain and suggest a fix for this error: {user_query}"
+
                 # Send query to OpenAI API
                 response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",  # Use "gpt-4" if available
+                    model="gpt-3.5-turbo",
                     messages=[
-                        {"role": "system", "content": "You are a helpful assistant specialized in data analysis and visualization."},
-                        {"role": "user", "content": user_query}
+                        {"role": "system", "content": system_message},
+                        {"role": "user", "content": formatted_query}
                     ]
                 )
                 # Extract and display the response content
